@@ -1,10 +1,7 @@
-import { Text, View } from 'react-native';
+import MainNavigation from './src/components/MainNavigation';
 
 export default function App() {
   return (
-    <View>
-      <Text>Open up App.js to start working on your app!</Text>
-    </View>
+    <MainNavigation />
   );
 }
-
