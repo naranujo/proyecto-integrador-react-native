@@ -1,7 +1,68 @@
-import { View } from 'react-native'
+import React, {Component} from 'react';
+import { db, auth } from '../firebase/config';
+import { View,
+         Text,
+         TouchableOpacity, 
+         StyleSheet, 
+         ActivityIndicator,
+         FlatList, 
+         Image } from 'react-native';
+import Post from './Post';
 
-export default function Home() {
-    return (
-      <View></View>
-    );
+class Home extends Component {
+    constructor(props){
+        super(props);
+        this.state={
+            posts:[]
+        }
+    }
+    
+    componentDidMount(){
+        db.collection('posts').onSnapshot(
+            docs => {
+                let posts = [];
+                docs.forEach( oneDoc => {
+                    posts.push({
+                        id: oneDoc.id,
+                        data: oneDoc.data()
+                    })
+                })
+
+                this.setState({
+                    posts: posts
+                })
+            }
+        )
+
+        
+    }
+
+
+    render(){
+        // console.log(this.state);
+        return(
+                <View>
+                    <Text>Posteos</Text>
+                    <FlatList 
+                    style={styles.flatlist}
+                        data={this.state.posts}
+                        keyExtractor={post => post.id}
+                        renderItem = { ({item}) => <Post dataPost={item} 
+                        {...this.props} />}
+                    />
+                    
+                </View>
+
+        )
+    }
+}
+const styles = StyleSheet.create({
+  flatlist:{
+    overflow:"hidden",
+    width:"100%",
+    flex:9,
+    flexDirection:"column"
   }
+})
+
+export default Home;
