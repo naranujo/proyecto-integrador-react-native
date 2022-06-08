@@ -24,19 +24,30 @@ class MainNavigation extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            logueado: false,
+            loggedIn: false,
             registerErrors: null,
             addUserErrors: null,
-            user: null,
+            
         };
     }
     componentDidMount() {
         auth.onAuthStateChanged((user) => {
-            this.setState({
-                loggeado: true,
+            if(user){
+                 this.setState({
+                loggedIn: true,
                 user: user,
             });
+            }
+           
         });
+    }
+    login(mail, pass){
+        auth.signInWithEmailAndPassword(mail, pass)
+            .then(response => this.setState({
+                loggedIn:true
+            }))
+            .catch( error => console.log(error))
+
     }
     register(userEmail, userPassword, userName, userImage) {
         if (this.state.registerErrors === null && this.state.addUserErrors === null) {
@@ -68,9 +79,10 @@ class MainNavigation extends Component {
                         db.collection("users")
                             .add({
                                 email: userEmail,
-                                name: userName,
+                                username: userName,
                                 photo: userImage,
                             })
+
                             .then((res) => {
                                 console.log("Usuario agregado", "users/Collection");
                                 alert("Usuario agregado")
@@ -85,8 +97,9 @@ class MainNavigation extends Component {
                             .then((res) => {
                                 console.log(
                                     "Usuario registrado exitosamente",
-                                    "method/Authentication"
+                                    "method/Authentication",res
                                 );
+                               
                             })
                             .catch((err) => {
                                 this.setState({
@@ -106,20 +119,16 @@ class MainNavigation extends Component {
             })
         }
     }
-    logout() {
-        auth
-            .signOut()
-            .then((res) => {
-                this.setState({
-                    loggedIn: false,
-                    user: null,
-                });
-                console.log("La sesión se cerró con éxito");
-            })
-            .catch((err) => alert(err.message));
+    logout(){
+            auth.signOut()
+            .then( response => this.setState({
+                loggedIn: false
+            }))
+            .catch( error => console.log(error))
     }
+    
     render() {
-        return this.state.logueado === false ? (
+        return this.state.loggedIn === false ? (
             <NavigationContainer>
                 <Stack.Navigator>
                     <Stack.Screen
@@ -132,14 +141,14 @@ class MainNavigation extends Component {
                             register: (mail, pass, name, image) => this.register(mail, pass, name, image)
                         }}
                     />
-                    <Stack.Screen
-                        name="Login"
-                        children={(props) => <Login {...props} />}
-                        options={{ headerShown: false }}
-                        initialParams={{
-                            login: (mail, pass, name, photo) =>
-                                this.login(mail, pass, name, photo),
-                        }}
+                    
+                    <Stack.Screen 
+                            name='Login'
+                            component = { Login }
+                            options = {{headerShown: false}}
+                            initialParams = {
+                                {   login: (mail, pass)=>this.login(mail, pass),
+                                }}
                     />
                 </Stack.Navigator>
             </NavigationContainer>
