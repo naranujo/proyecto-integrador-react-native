@@ -24,7 +24,7 @@ class Profile extends Component{
     }
     render(){
         console.log(auth.currentUser);
-        //Incluir en el render un ToucheableOpacity para ejecutar el método de logout que viene del padre. ¿Quién es el padre?
+        
         return(
                 <View>
                    

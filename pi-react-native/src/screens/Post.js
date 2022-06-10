@@ -28,14 +28,14 @@ class Post extends Component{
     }
 
     like(){
-        //Agregar el email del user logueado en el array
+        
         db.collection('posts')
             .doc(this.props.dataPost.id)
             .update({
                 likes: firebase.firestore.FieldValue.arrayUnion(auth.currentUser.email)
             })
             .then(()=> this.setState({
-                cantidadDeLikes:this.state.cantidadDeLikes + 1, //Se puede mejorar.
+                cantidadDeLikes:this.state.cantidadDeLikes + 1, 
                 myLike: true,
             }))
             .catch(error => console.log(error))
@@ -43,14 +43,14 @@ class Post extends Component{
     }
 
     unLike(){
-        //Agregar el email del user logueado en el array
+       
         db.collection('posts')
             .doc(this.props.dataPost.id)
             .update({
                 likes: firebase.firestore.FieldValue.arrayRemove(auth.currentUser.email)
             })
             .then(()=> this.setState({
-                cantidadDeLikes:this.state.cantidadDeLikes - 1, //Se puede mejorar
+                cantidadDeLikes:this.state.cantidadDeLikes - 1, 
                 myLike: false
             }))
             .catch(error => console.log(error))
@@ -58,7 +58,7 @@ class Post extends Component{
 
 
     render(){
-        // console.log(this.props);
+      
         return(
                 <View style={styles.separator}>
                     <Text>Post de: {this.props.dataPost.data.owner}</Text>
