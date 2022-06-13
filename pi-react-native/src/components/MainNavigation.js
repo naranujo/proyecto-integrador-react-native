@@ -143,7 +143,7 @@ class MainNavigation extends Component {
         <Stack.Navigator>
             {this.state.loggedIn === true ?
             <Stack.Group>
-            <Stack.Screen name= "Menu" component={Menu} initialParams={{user:this.state.user}}/>
+            <Stack.Screen name= "Menu" component={Menu} options={{headerShown: false}} initialParams={{user:this.state.user}}/>
             <Stack.Screen name= "Comment" component={Comment}/>
             </Stack.Group>
             :
